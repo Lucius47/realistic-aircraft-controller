@@ -10,23 +10,19 @@ public class UI : MonoBehaviour
     [SerializeField] Text upwardAcc;
     [SerializeField] Text forwardAcc;
 
-    [SerializeField] AircraftMain aircraft;
-    [SerializeField] Slider elevatorControlScrolbar;
+    [SerializeField] AircraftPhysics aircraftPhy;
 
     void Start()
     {
-        elevatorControlScrolbar.minValue = -1;
-        elevatorControlScrolbar.maxValue = 1;
-        elevatorControlScrolbar.value = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         //aircraft.ElevatorExtension = elevatorControlScrolbar.value;
-        forwardVel.text = aircraft.ForwardVelocity.ToString();
-        upwardVel.text = aircraft.UpwardVelocity.ToString();
-        upwardAcc.text = aircraft.UpwardAcc.ToString();
-        forwardAcc.text = aircraft.ForwardAcc.ToString();
+        forwardVel.text = aircraftPhy.ForwardVelocity.ToString();
+        upwardVel.text = aircraftPhy.UpwardVelocity.ToString();
+        upwardAcc.text = aircraftPhy.UpwardAcc.ToString();
+        forwardAcc.text = aircraftPhy.ForwardAcc.ToString();
     }
 }

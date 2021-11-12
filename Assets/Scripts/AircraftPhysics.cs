@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AircraftMain : MonoBehaviour
+public class AircraftPhysics : MonoBehaviour
 {
     Aircraft aircraft;
     Rigidbody rb;
     Vector3 velocity;
+    float gravity = 98.1f;
+
+    float engineThrustPercentage;
+    float aileronExtension;
+    float elevatorExtension;
+    float rudderExtension;
+
     float lastUpVelocity;
     float lastForwardVelocity;
     float accelerationY;
     float accelerationZ;
-    float engineThrustPercentage;
-
-    float flapExtension;
-    float aileronExtension;
-    float elevatorExtension;
-    float rudderExtension;
+    
 
 
     void Start()
@@ -30,6 +32,8 @@ public class AircraftMain : MonoBehaviour
     {
 
         ApplyEngineThrust();
+        ApplyDrag();
+        ApplyGravity();
         ApplyWingsLift();
         ApplyElevatorForce();
         ApplyRudderForce();
@@ -46,7 +50,18 @@ public class AircraftMain : MonoBehaviour
 
     void ApplyEngineThrust()
     {
-        rb.AddForce(transform.forward * engineThrustPercentage * aircraft.EnginePower);
+        rb.AddForce(transform.forward * (engineThrustPercentage * aircraft.EnginePower + 0));
+        //Debug.DrawRay(aircraft.EngineThrustPosition, transform.forward * engineThrustPercentage * 10, Color.red);
+    }
+
+    void ApplyDrag()
+    {
+        rb.AddForce(-transform.forward * Mathf.Pow(velocity.z, 2) * 0.001f);
+    }
+
+    void ApplyGravity()
+    {
+        rb.AddForce((new Vector3(0, -1, 0) * gravity * rb.mass));
         //Debug.DrawRay(aircraft.EngineThrustPosition, transform.forward * engineThrustPercentage * 10, Color.red);
     }
 
@@ -73,7 +88,7 @@ public class AircraftMain : MonoBehaviour
     float CalculateWingsLift()
     {
         float lift = velocity.z;
-        lift = Mathf.Clamp(lift, 2, 9.82f * rb.mass);
+        lift = Mathf.Clamp(lift, 2, gravity * rb.mass);
         return lift;
     }
 
@@ -81,32 +96,23 @@ public class AircraftMain : MonoBehaviour
     {
         get { return velocity.z; }
     }
-
     public float UpwardVelocity
     {
         get { return velocity.y; }
     }
-
-    public float UpwardAcc
-    {
-        get { return accelerationY; }
-    }
-
     public float ForwardAcc
     {
         get { return accelerationZ; }
+    }
+    public float UpwardAcc
+    {
+        get { return accelerationY; }
     }
 
     public float EngineThrustPercentage
     {
         get { return engineThrustPercentage; }
         set { engineThrustPercentage = value/100; }
-    }
-
-    public float FlapExtension
-    {
-        get { return flapExtension; }
-        set { flapExtension = value; }
     }
 
     public float ElevatorExtension

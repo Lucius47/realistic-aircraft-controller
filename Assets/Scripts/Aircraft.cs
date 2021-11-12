@@ -7,8 +7,6 @@ public class Aircraft : MonoBehaviour
     [SerializeField] float enginePower;
     [SerializeField] float stallVelocity;
 
-
-
     Rigidbody rb;
 
     void Start()

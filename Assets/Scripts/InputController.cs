@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class InputController : MonoBehaviour
 {
-    AircraftMain am;
+    AircraftPhysics ap;
 
-    float engineThrustPercentage; // 0 - 100%
+    float engineThrustPercentage = 100; // 0 - 100%
     void Start()
     {
-        am = GetComponent<AircraftMain>();
+        ap = GetComponent<AircraftPhysics>();
     }
 
     // Update is called once per frame
@@ -22,9 +22,9 @@ public class InputController : MonoBehaviour
         engineThrustPercentage += engineThrustAxis;
         engineThrustPercentage = Mathf.Clamp(engineThrustPercentage, 0, 100);
 
-        am.EngineThrustPercentage = engineThrustPercentage;
-        am.ElevatorExtension = pitchAxis;
-        am.RudderExtension = yawAxis;
-        am.AileronExtension = rollAxis;
+        ap.EngineThrustPercentage = engineThrustPercentage;
+        ap.ElevatorExtension = pitchAxis;
+        ap.RudderExtension = yawAxis;
+        ap.AileronExtension = rollAxis;
     }
 }
