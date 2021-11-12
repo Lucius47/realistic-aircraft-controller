@@ -21,11 +21,10 @@ public class InputController : MonoBehaviour
         float engineThrustAxis = Input.GetAxis("EngineThrust");
         engineThrustPercentage += engineThrustAxis;
         engineThrustPercentage = Mathf.Clamp(engineThrustPercentage, 0, 100);
-        //print("Engine Thrust Percentage: " + engineThrustPercentage);
+
         am.EngineThrustPercentage = engineThrustPercentage;
         am.ElevatorExtension = pitchAxis;
         am.RudderExtension = yawAxis;
-        am.LeftAileronExtension = rollAxis;
-        am.RightAileronExtension= -rollAxis;
+        am.AileronExtension = rollAxis;
     }
 }

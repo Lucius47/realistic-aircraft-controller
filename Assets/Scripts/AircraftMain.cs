@@ -17,8 +17,6 @@ public class AircraftMain : MonoBehaviour
     float aileronExtension;
     float elevatorExtension;
     float rudderExtension;
-    float leftAileronExtension;
-    float rightAileronExtension;
 
 
     void Start()
@@ -28,77 +26,55 @@ public class AircraftMain : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
 
         ApplyEngineThrust();
+        ApplyWingsLift();
+        ApplyElevatorForce();
+        ApplyRudderForce();
+        ApplyAileronsForce();
+
+
         velocity = transform.InverseTransformDirection(rb.velocity);
         accelerationY = (velocity.y - lastUpVelocity) / Time.fixedDeltaTime;
         lastUpVelocity = velocity.y;
-
         accelerationZ = (velocity.z - lastForwardVelocity) / Time.fixedDeltaTime;
         lastForwardVelocity = velocity.z;
 
-        ApplyLeftWingLift();
-        ApplyRightWingLift();
-        ApplyElevatorForce();
-        ApplyRudderForce();
-        ApplyLeftAileronForce();
-        ApplyRightAileronForce();
     }
 
     void ApplyEngineThrust()
     {
-        rb.AddForceAtPosition(transform.forward * engineThrustPercentage * aircraft.EnginePower * 50, aircraft.EngineThrustPosition);
-        Debug.DrawRay(aircraft.EngineThrustPosition, transform.forward * engineThrustPercentage * 10, Color.red);
-        print(engineThrustPercentage * aircraft.EnginePower);
+        rb.AddForce(transform.forward * engineThrustPercentage * aircraft.EnginePower);
+        //Debug.DrawRay(aircraft.EngineThrustPosition, transform.forward * engineThrustPercentage * 10, Color.red);
     }
 
-    void ApplyLeftWingLift()
+    void ApplyWingsLift()
     {
-        rb.AddForceAtPosition((new Vector3(0, 1, 0) * CalculateWingsLift() / 2), aircraft.LeftWingLiftPosition);
-        Debug.DrawRay(aircraft.LeftWingLiftPosition, new Vector3(0, 1, 0) * 5 / 2, Color.red);
-    }
-
-    void ApplyRightWingLift()
-    {
-        rb.AddForceAtPosition((new Vector3(0, 1, 0) * CalculateWingsLift() / 2), aircraft.RightWingLiftPosition);
-        Debug.DrawRay(aircraft.RightWingLiftPosition, new Vector3(0, 1, 0) * 5 / 2, Color.red);
+        rb.AddForce((new Vector3(0, 1, 0) * CalculateWingsLift()));
     }
 
     void ApplyElevatorForce()
     {
-        rb.AddForceAtPosition(transform.up * elevatorExtension, aircraft.ElevatorLiftPosition);
-        Debug.DrawRay(aircraft.ElevatorLiftPosition, transform.up * 10 * elevatorExtension, Color.red);
+        rb.AddTorque(transform.right * elevatorExtension * 100);
     }
 
     void ApplyRudderForce()
     {
-        rb.AddForceAtPosition(-transform.right * rudderExtension, aircraft.RudderForcePosition);
-        Debug.DrawRay(aircraft.RudderForcePosition, -transform.right * 10 * rudderExtension, Color.red);
+        rb.AddTorque(transform.up * rudderExtension * 100);
     }
 
-    void ApplyLeftAileronForce()
+    void ApplyAileronsForce()
     {
-        rb.AddForceAtPosition(transform.up * leftAileronExtension, aircraft.LeftAileronForcePosition);
-        Debug.DrawRay(aircraft.LeftAileronForcePosition, transform.up * 10 * leftAileronExtension, Color.red);
-    }
-
-    void ApplyRightAileronForce()
-    {
-        rb.AddForceAtPosition(transform.up * rightAileronExtension, aircraft.RightAileronForcePosition);
-        Debug.DrawRay(aircraft.RightAileronForcePosition, transform.up * 10 * rightAileronExtension, Color.red);
+        rb.AddTorque(transform.forward * -aileronExtension * 100);
     }
 
     float CalculateWingsLift()
     {
-        float areaFacingWindStream = (aircraft.WingArea * -transform.rotation.x) + 0.1f; //AoA
-        //return 0.1f * Mathf.Pow(velocity.z, 2) * areaFacingWindStream / 2;
-        if (velocity.z < aircraft.StallVelocity)
-            return 2.82f * rb.mass;
-        else
-        return 9.82f * rb.mass;
+        float lift = velocity.z;
+        lift = Mathf.Clamp(lift, 2, 9.82f * rb.mass);
+        return lift;
     }
 
     public float ForwardVelocity
@@ -145,15 +121,10 @@ public class AircraftMain : MonoBehaviour
         set { rudderExtension = value; }
     }
 
-    public float LeftAileronExtension
+    public float AileronExtension
     {
-        get { return leftAileronExtension;}
-        set { leftAileronExtension = value; }
+        get { return aileronExtension;}
+        set { aileronExtension = value; }
     }
 
-    public float RightAileronExtension
-    {
-        get { return rightAileronExtension; }
-        set { rightAileronExtension = value; }
-    }
 }
