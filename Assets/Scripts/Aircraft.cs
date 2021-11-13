@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+// Stores properties specific to a vertain aircraft. Such as engine power, wings area, drag and lift coefficients,
+// mass, max operational altitude etc.
 
 public class Aircraft : MonoBehaviour
 {
@@ -14,7 +15,6 @@ public class Aircraft : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.inertiaTensorRotation = Quaternion.identity;
         rb.centerOfMass = Vector3.zero;
-
     }
 
     public float EnginePower
@@ -26,5 +26,4 @@ public class Aircraft : MonoBehaviour
     //{
     //    get { return stallVelocity; }
     //}
-
 }

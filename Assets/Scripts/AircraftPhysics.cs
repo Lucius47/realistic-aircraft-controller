@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+
+// Controls the interaction of the aircraft with the world.
 
 public class AircraftPhysics : MonoBehaviour
 {
     Aircraft aircraft;
     Rigidbody rb;
+
     float gravity = 98.1f;
 
     float engineThrustPercentage;
@@ -19,11 +20,10 @@ public class AircraftPhysics : MonoBehaviour
     
 
 
-    void Start()
+    void Awake()
     {
         aircraft = GetComponent<Aircraft>();
-        rb = GetComponent<Rigidbody>();
-        
+        rb = GetComponent<Rigidbody>();    
     }
 
     void FixedUpdate()
@@ -37,13 +37,14 @@ public class AircraftPhysics : MonoBehaviour
         ApplyRudderForce();
         ApplyAileronsForce();
 
+        // Calculates acceleration. Has some issues.
         accelerationY = (Velocity.y - lastUpVelocity) / Time.fixedDeltaTime;
         lastUpVelocity = Velocity.y;
         accelerationZ = (Velocity.z - lastForwardVelocity) / Time.fixedDeltaTime;
         lastForwardVelocity = Velocity.z;
-
     }
 
+    #region
     void ApplyEngineThrust()
     {
         rb.AddForce(transform.forward * (engineThrustPercentage * aircraft.EnginePower));
@@ -87,7 +88,6 @@ public class AircraftPhysics : MonoBehaviour
         //{
             //rb.AddTorque(transform.forward * -10);
         //}
-        
     }
 
     float CalculateWingsLift()
@@ -96,7 +96,9 @@ public class AircraftPhysics : MonoBehaviour
         lift = Mathf.Clamp(lift, 2, gravity * rb.mass);
         return lift;
     }
+    #endregion
 
+    #region
     public Vector3 Velocity
     {
         get { return transform.InverseTransformDirection(rb.velocity); }
@@ -111,6 +113,7 @@ public class AircraftPhysics : MonoBehaviour
     {
         get { return accelerationZ; }
     }
+
     public float UpwardAcc
     {
         get { return accelerationY; }
@@ -142,7 +145,9 @@ public class AircraftPhysics : MonoBehaviour
 
     public float AngleWithHorizon
     {
+        // Does not work as intended
         get { return Vector3.SignedAngle(Vector3.ProjectOnPlane(transform.up, transform.forward), Vector3.up, transform.forward); }
     }
+    #endregion
 
 }
