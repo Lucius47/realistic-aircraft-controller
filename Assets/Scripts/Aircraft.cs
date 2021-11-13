@@ -5,7 +5,7 @@ using UnityEngine;
 public class Aircraft : MonoBehaviour
 {
     [SerializeField] float enginePower;
-    [SerializeField] float stallVelocity;
+    //[SerializeField] float stallVelocity;
 
     Rigidbody rb;
 
@@ -22,9 +22,9 @@ public class Aircraft : MonoBehaviour
         get { return enginePower; }
     }
 
-    public float StallVelocity
-    {
-        get { return stallVelocity; }
-    }
+    //public float StallVelocity
+    //{
+    //    get { return stallVelocity; }
+    //}
 
 }

@@ -6,14 +6,12 @@ public class AircraftPhysics : MonoBehaviour
 {
     Aircraft aircraft;
     Rigidbody rb;
-    Vector3 velocity;
     float gravity = 98.1f;
 
     float engineThrustPercentage;
     float aileronExtension;
     float elevatorExtension;
     float rudderExtension;
-
     float lastUpVelocity;
     float lastForwardVelocity;
     float accelerationY;
@@ -39,35 +37,32 @@ public class AircraftPhysics : MonoBehaviour
         ApplyRudderForce();
         ApplyAileronsForce();
 
-
-        velocity = transform.InverseTransformDirection(rb.velocity);
-        accelerationY = (velocity.y - lastUpVelocity) / Time.fixedDeltaTime;
-        lastUpVelocity = velocity.y;
-        accelerationZ = (velocity.z - lastForwardVelocity) / Time.fixedDeltaTime;
-        lastForwardVelocity = velocity.z;
+        accelerationY = (Velocity.y - lastUpVelocity) / Time.fixedDeltaTime;
+        lastUpVelocity = Velocity.y;
+        accelerationZ = (Velocity.z - lastForwardVelocity) / Time.fixedDeltaTime;
+        lastForwardVelocity = Velocity.z;
 
     }
 
     void ApplyEngineThrust()
     {
-        rb.AddForce(transform.forward * (engineThrustPercentage * aircraft.EnginePower + 0));
+        rb.AddForce(transform.forward * (engineThrustPercentage * aircraft.EnginePower));
         //Debug.DrawRay(aircraft.EngineThrustPosition, transform.forward * engineThrustPercentage * 10, Color.red);
     }
 
     void ApplyDrag()
     {
-        rb.AddForce(-transform.forward * Mathf.Pow(velocity.z, 2) * 0.001f);
+        rb.AddForce(-transform.forward * Mathf.Pow(Velocity.z, 2) * 0.001f);
     }
 
     void ApplyGravity()
     {
-        rb.AddForce((new Vector3(0, -1, 0) * gravity * rb.mass));
-        //Debug.DrawRay(aircraft.EngineThrustPosition, transform.forward * engineThrustPercentage * 10, Color.red);
+        rb.AddForce(Vector3.down * gravity * rb.mass);
     }
 
     void ApplyWingsLift()
     {
-        rb.AddForce((new Vector3(0, 1, 0) * CalculateWingsLift()));
+        rb.AddForce(Vector3.up * CalculateWingsLift());
     }
 
     void ApplyElevatorForce()
@@ -83,23 +78,35 @@ public class AircraftPhysics : MonoBehaviour
     void ApplyAileronsForce()
     {
         rb.AddTorque(transform.forward * -aileronExtension * 100);
+        //print(AngleWithHorizon);
+        //if (AngleWithHorizon > 0 && AngleWithHorizon < 90)
+        //{
+            //rb.AddTorque(transform.forward * 10);
+        //}
+        //if (AngleWithHorizon > 90 && AngleWithHorizon < 180)
+        //{
+            //rb.AddTorque(transform.forward * -10);
+        //}
+        
     }
 
     float CalculateWingsLift()
     {
-        float lift = velocity.z;
+        float lift = Velocity.z;
         lift = Mathf.Clamp(lift, 2, gravity * rb.mass);
         return lift;
     }
 
-    public float ForwardVelocity
+    public Vector3 Velocity
     {
-        get { return velocity.z; }
+        get { return transform.InverseTransformDirection(rb.velocity); }
     }
-    public float UpwardVelocity
+
+    public float Altitude
     {
-        get { return velocity.y; }
+        get { return transform.position.y; }
     }
+
     public float ForwardAcc
     {
         get { return accelerationZ; }
@@ -131,6 +138,11 @@ public class AircraftPhysics : MonoBehaviour
     {
         get { return aileronExtension;}
         set { aileronExtension = value; }
+    }
+
+    public float AngleWithHorizon
+    {
+        get { return Vector3.SignedAngle(Vector3.ProjectOnPlane(transform.up, transform.forward), Vector3.up, transform.forward); }
     }
 
 }
