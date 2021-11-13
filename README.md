@@ -4,6 +4,11 @@ Aircraft Controller Demo (Joystick)
  
 Unity Version: 2019.4.21f1 LTS
 
+Physics based simulation of an aircraft.
+- Aircraft controlled by roll, pitch, yaw, and thrust axes; similar to a real aircraft.
+- More aircrafts can be added.
+- Properties suchs as drag and lift coefficients, wings area etc will be added eventually.
+
 # Keyboard Controls:
 
 Thrust: W (increase), S (decrease)
