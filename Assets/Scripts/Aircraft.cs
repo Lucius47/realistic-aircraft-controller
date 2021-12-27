@@ -15,6 +15,7 @@ public class Aircraft : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.inertiaTensorRotation = Quaternion.identity;
         rb.centerOfMass = Vector3.zero;
+        // new change
     }
 
     public float EnginePower
@@ -22,8 +23,5 @@ public class Aircraft : MonoBehaviour
         get { return enginePower; }
     }
 
-    //public float StallVelocity
-    //{
-    //    get { return stallVelocity; }
-    //}
+    
 }
