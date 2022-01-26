@@ -1,7 +1,11 @@
 Method XYZ () 
 {
 1,2,3,4,5
+<<<<<<< HEAD
 //changes made in local
+=======
+//changes made in cloud
+>>>>>>> 14063bc886d2e91b7164ded4d6b84fecfb11e836
 }
 
 Method ABC () 
