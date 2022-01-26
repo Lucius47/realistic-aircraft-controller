@@ -1,10 +1,6 @@
 Method XYZ () 
 {
 1,2,3,4,5
-//changes made in local
-=======
-//changes made in cloud
-}
 
 Method ABC () 
 {
